@@ -1,0 +1,45 @@
+* {
+	box-sizing: border-box;
+}
+
+div {
+	max-width: 800px;
+	margin: 0px auto;
+}
+address {
+	font-size: 20pt;
+}
+
+img {
+	height: 200px;
+	width: 200px;
+}
+
+time {
+	font-size: 8pt;
+	font-weight: lighter;
+	color: lightgrey;
+}
+
+legend {
+	font-weight: bold;
+	color: lightgreen;
+}
+
+input {
+	border: 1px solid black;
+	border-radius: 3px;
+}
+
+input[type='submit']{
+	background: orange;
+	margin: 5px;
+}
+div {
+	text-align: center;
+	background: whitesmoke
+}
+.div2 {
+	font-weight: bold;
+	color: black;
+}
