@@ -11,6 +11,12 @@ function stringGet ($str){
 }
 var_dump(stringGet($strin));
 var_dump(stringGet('C:\OpenServer\testsite\www\someFile.txt'));
+$file_name = 'C:\OpenServer\testsite\www\someFile.txt';
+
+function fileName ($str){
+	return basename($str);
+}
+var_dump(fileName($file_name));
 /*
 2. Написать функцию - конвертер строки.
     Возможности (в зависимости от второго аргумента - флаг, который указывает, какую именно операцию следует выполнить): 
@@ -56,6 +62,79 @@ function CamelCase($stt){
 }
 
 var_dump(CamelCase('this_is_string'));
+
+
+/* Дано два текста. Определите степень совпадения текстов (разработать алгоритм определения соответствия по 5 балльной шкале).
+*/
+
+
+$textA = 'Дано два текста. Определите степень совпадения текстов (разработать алгоритм определения соответствия по ';
+$textB = 'разработать алгоритм определения соответствия по 5 балльной шкале';
+
+function compareText ($text_a, $text_b) {
+		similar_text($text_a, $text_b, $perc);	 	
+	 	 $res = (5 * round($perc))/100;
+	 		echo "Cовпадение по 5 бальной шкале $res <br>";
+}
+var_dump(compareText($textA, $textB));
+
+
+/*
+ Дан массив, состоящий из целых чисел. Выполнить сортировку массива по возрастанию суммы цифр чисел. Например, дан массив [13, 55, 100]. После сортировки он будет следующего вида: [100, 13, 55], тк сумма цифр числа 100 = 1, сумма цифр числа 13 = 4, а 55 = 10.
+На экран вывести исходный массив, массив после сортировки и сумму цифр каждого числа отсортированного массива.
+*/
+
+$arry = [13, 100, 55];
+
+function viewArry($arr) {
+	$arrP = [];
+	//arsort($arr);
+	foreach ($arr as $value) {
+			$value = (string) $value;
+			$sum = 0;
+		for ($i=0; $i <= strlen($value) ; $i++) { 
+			$val = (int) $value[$i];
+			$sum += $val;
+					
+		}	
+		echo "Сумма числа $value равна: $sum<br> ";
+		var_dump($value);	
+		var_dump($sum);
+		array_push($arrP, $sum);
+	}
+	asort($arrP);
+	return $arrP;
+}
+echo "Исходный массив";
+var_dump($arry);
+echo "Массив по максимальному элементу<br>";
+var_dump(viewArry($arry));
+
+function cmp ($a, $b){
+	if ($a['key'] == $b['key']) {
+		return 0;
+	}
+	return($a['key'] < $b['key'])? -1 : 1;
+}
+
+function maxElem($arr){
+	usort($arr, cmp);
+	return $arr;
+}
+
+var_dump(maxElem($arry));
+
+
+
+
+$num = '45';
+$sum = 0;
+for ($i=0; $i <= strlen($num) ; $i++) { 
+	$sum += $num[$i];
+}
+var_dump($sum);
+var_dump(strlen($num));
+
 
 
 
