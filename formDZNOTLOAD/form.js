@@ -19,18 +19,18 @@ FormValidator.prototype.addRules = function(rules){
 
 FormValidator.prototype.some = function(event){
 console.log(event);
-    event.preventDefault();
-    for (let i = 0; i < this._elems.length; i++){
+       for (let i = 0; i < this._elems.length; i++){
         if (!this._rules[this._elems[i].name].test(this._elems[i].value)) {
-           console.log("error");
-            this._form[i].style.background = "red";
-            this._res_form.push(false);
-         //  alert(this._messages[this._form[i].name]);           
+            console.log("error");
+            console.log(this._messages[this._form[i].name]);
+           this._form[i].style.background = "red";
+            return false;
+              
         }
-            this._elems[i].style.background = "green";
-            this._res_form.push(true);        
-    }   
-    
+          this._elems[i].style.background = "green";
+            return true;
+    }
+   
 };
 
 let formValidator = new FormValidator(form);
@@ -54,26 +54,17 @@ formValidator.addRules({
     }
 });
 
-console.log(this._res_form);
+console.log(formValidator.some());
 
 function ajaxHandler (event){
 	event.preventDefault();
-    //this._res_form = true;
-	let validate_fields = document.querySelectorAll('.validate');
-    if (!formValid(this._res_form)) {
+    let validate_fields = document.querySelectorAll('.validate');
+       if (!formValidator.some()) {
 		document.getElementById("errors").innerHTML = 
 		'не все поля заполнены';
 		return;
 	}
-    function formValid(fields){
-
-    for (let i =0; i < fields.length; i++) {
-        if (fields[i] == true) {
-            return false;
-        }       
-    }
-    return true;
-}	
+    
 	let form_data = new FormData(this);//встоенный объект
 	console.log(form_data.get("login"));
 	let xhr = new XMLHttpRequest(); //объект запроса
