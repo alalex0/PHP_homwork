@@ -3,8 +3,6 @@ let form = document.forms.someForm;
 
 //отправка без перезагруки страницы
 
-form.addEventListener('submit', ajaxHandler);
-
 function FormValidator(form) {
     this._form = form;
     this._form.addEventListener('submit', this.some.bind(this));
@@ -18,25 +16,31 @@ FormValidator.prototype.addRules = function(rules){
 };
 
 FormValidator.prototype.some = function(event){
-console.log(event);
-       for (let i = 0; i < this._elems.length; i++){
+    for (let i = 0; i < this._elems.length; i++){
         if (!this._rules[this._elems[i].name].test(this._elems[i].value)) {
-            console.log("error");
-            console.log(this._messages[this._form[i].name]);
+           console.log(this._messages[this._form[i].name]);
            this._form[i].style.background = "red";
-            return false;
-              
+           this._res_form.push(false);
+           //  alert(this._messages[this._form[i].name]);           
         }
-          this._elems[i].style.background = "green";
+           this._elems[i].style.background = "green";
+           this._res_form.push(true);
+        }
+        let sum = 0;
+    for (let i = 0; i < this._res_form.length; i++) {
+        if (!this._res_form[i]) {
+             return false;
+        }
+        if (this._res_form[i]) {
+            sum++;
+        }
+        if (sum == this._res_form.length) {
             return true;
+        }
     }
-   
+
 };
-
 let formValidator = new FormValidator(form);
-
-console.log(formValidator);
-
 formValidator.addRules({
     rules: {
         login: /login/,
@@ -54,17 +58,16 @@ formValidator.addRules({
     }
 });
 
-console.log(formValidator.some());
+form.addEventListener('submit', ajaxHandler);
 
 function ajaxHandler (event){
 	event.preventDefault();
     let validate_fields = document.querySelectorAll('.validate');
-       if (!formValidator.some()) {
-		document.getElementById("errors").innerHTML = 
-		'не все поля заполнены';
-		return;
-	}
-    
+    if (!formValidator.some()){
+        document.getElementById("errors").innerHTML =
+            'Данные введены некорректно или не все поля заполнены';
+        return;
+    }        
 	let form_data = new FormData(this);//встоенный объект
 	console.log(form_data.get("login"));
 	let xhr = new XMLHttpRequest(); //объект запроса
@@ -84,8 +87,9 @@ function ajaxHandler (event){
 }
 
 function responseHandler(text){
-
-	console.log("ответ сервера" + text);
+    console.log("ответ сервера" + text);
+    document.getElementById("sarver").innerHTML =
+            'Спасибо, данные получены';
 }
 
 

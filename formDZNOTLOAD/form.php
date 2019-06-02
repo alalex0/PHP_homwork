@@ -6,6 +6,7 @@
 </head>
 <body>
 	<p id="errors"></p>
+	<p id="sarver"></p>
 <form name="someForm" method="post" action="formhandle.php">
 	<p><input class="validate" type="text" placeholder="username" name="username"></p>
 	<p><input class="validate" type="text" placeholder="дата рождения" name="birth"></p>
