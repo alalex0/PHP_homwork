@@ -32,9 +32,12 @@ if($valid_url){
 	file_put_contents($file, $current, FILE_APPEND | LOCK_EX);
 }
 */
-function stringGet ($str){
-	$s = substr($str, 27, -4);
-	return $s;
+function stringGet ($valid_url){
+	$parse_url = parse_url($valid_url);
+	foreach ($parse_url as $value) {
+		$shot_url = $parse_url['scheme'] . '://' . $parse_url['host'];
+		return $shot_url;
+	}
 }
 function urlHesh($str){
 	 $url_h = md5($str);
