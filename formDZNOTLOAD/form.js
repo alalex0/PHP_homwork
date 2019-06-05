@@ -18,6 +18,7 @@ FormValidator.prototype.addRules = function(rules){
 FormValidator.prototype.some = function(event){
     for (let i = 0; i < this._elems.length; i++){
         if (!this._rules[this._elems[i].name].test(this._elems[i].value)) {
+            document.getElementById("errors").innerHTML = this._messages[this._form[i].name];
            console.log(this._messages[this._form[i].name]);
            this._form[i].style.background = "red";
            this._res_form.push(false);
@@ -29,12 +30,14 @@ FormValidator.prototype.some = function(event){
         let sum = 0;
     for (let i = 0; i < this._res_form.length; i++) {
         if (!this._res_form[i]) {
+            this._res_form.length = [];    
              return false;
         }
         if (this._res_form[i]) {
             sum++;
         }
         if (sum == this._res_form.length) {
+            this._res_form.length = [];    
             return true;
         }
     }
@@ -43,11 +46,13 @@ FormValidator.prototype.some = function(event){
 let formValidator = new FormValidator(form);
 formValidator.addRules({
     rules: {
-        login: /login/,
-        password: /pwd/,
-        username:/user/,
-        mail:/mail/,
-        birth:/day/,
+        login: /^[a-zA-Z][a-zA-Z0-9-_\.]{1,20}$/,
+        //пароль содержит строчные и происные буквы латиница + цифры
+        password: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/,
+        username:/^[a-zA-Z][a-zA-Z0-9-_\.]{1,20}$/,
+        mail:/^[-\w.]+@([A-z0-9][-A-z0-9]+\.)+[A-z]{2,4}$/,
+        //дата в формате YYYY-MM-DD:
+        birth:/[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])/,
     },
     messages: {
         login: "Проверьте логин",
@@ -62,9 +67,8 @@ form.addEventListener('submit', ajaxHandler);
 
 function ajaxHandler (event){
 	event.preventDefault();
-    let validate_fields = document.querySelectorAll('.validate');
     if (!formValidator.some()){
-        document.getElementById("errors").innerHTML =
+        document.getElementById("err").innerHTML =
             'Данные введены некорректно или не все поля заполнены';
         return;
     }        
@@ -88,8 +92,9 @@ function ajaxHandler (event){
 
 function responseHandler(text){
     console.log("ответ сервера" + text);
-    document.getElementById("sarver").innerHTML =
-            'Спасибо, данные получены';
+    document.getElementById("err").innerHTML = '';
+    document.getElementById("errors").innerHTML = '';
+    document.getElementById("sarver").innerHTML = 'Спасибо, данные получены';
 }
 
 
