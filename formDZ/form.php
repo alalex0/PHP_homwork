@@ -5,13 +5,14 @@
 	<title>Form</title>
 </head>
 <body>
+	<p id="err"></p>
 	<p id="errors"></p>
 <form name="someForm" method="post" action="formhandle.php">
-	<p><input class="validate" type="text" placeholder="username" name="username"></p>
-	<p><input class="validate" type="text" placeholder="дата рождения" name="birth"></p>
-	<p><input class="validate" type="text" placeholder="mail@mail" name="mail"></p>
-	<p><input class="validate" type="text" placeholder="login" name="login"></p>
-	<p><input class="validate" type="password" placeholder="password" name="password"></p>
+	<p>Имя: <input class="validate" type="text" placeholder="username" name="username"></p>
+	<p>Дата рождения: <input class="validate" type="text" placeholder="дата рождения YYYY-MM-DD" name="birth"></p>
+	<p>E-mail: <input class="validate" type="text" placeholder="mail@mail" name="mail"></p>
+	<p>Логин: <input class="validate" type="text" placeholder="login" name="login"></p>
+	<p>Пароль: <input class="validate" type="password" placeholder="password" name="password"></p>
 	<p><label>Мужчина</label><input value="man" type="radio" name="gender[]"></p>
 	<p><label>Женщина</label><input value="woman" type="radio" name="gender[]"></p>
 <!--	<p><label>Одиночные чекбоксы<input type="checkbox" name="single"></label></p>
