@@ -79,10 +79,7 @@ function stringGetUrl ($valid_url){
 function random_bytes_http ($file, $valid_url){
 	$bytes = bin2hex(random_bytes(3));	
 	$random_bytes_http = array($bytes => $valid_url);
-	//if (searchURL($file_shot_http, $valid_url)) {
-			load_http($file, $random_bytes_http);
-		//	return $bytes;
-	//	}	
+	load_http($file, $random_bytes_http);		
 	return $bytes;
 }
 
@@ -128,26 +125,24 @@ $current.= $key.'=>' . $value . '
 		
 	echo "Введите ссылку еще раз<br>";
 	}
-
-	function searchURL($arr, $url_hesh){
-		 foreach ( $arr as $v ){
-		 	if ( strpos($v, $url_hesh, 0) !== false )
-	        {
+function searchURL($arr, $url_hesh){
+	foreach ( $arr as $v ){
+		if ( strpos($v, $url_hesh, 0) !== false ){
 	        	$url_hesh = $v; // найденная строка 
 	           return true;
-	        }	       		
-		 }
-		 return false;
+	    }	       		
 	}
-	function searchHesh($arr, $hesh){
-		foreach ( $arr as $v ){
-		 	if ( strpos($v, $hesh, 0) !== false ){	        	
+		 return false;
+}
+function searchHesh($arr, $hesh){
+	foreach ( $arr as $v ){
+		if ( strpos($v, $hesh, 0) !== false ){	        	
 	           var_dump("Создаем новый ХЭШ");	          
 	           return true;
-	        } 			        	  		
-		 }
-		 return false; 		
+	    } 			        	  		
 	}
+		 return false; 		
+}
 function urlHesh($url){
 	 $url_hesh = md5($url);
 	 return $url_hesh;
