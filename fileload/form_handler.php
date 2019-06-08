@@ -5,11 +5,14 @@ var_dump($post);
 
 // данные о загружаемых файлах в массиве $_FILES
 $files = $_FILES;
+var_dump($files);
 
-for ($i=0; $i < count($files['picture']['name']); $i++) { 	
-		$name = $files['picture']['name'][$i];		
+// обязательно проверить на размер
+for ($i=0; $i < count($files['picture']['name']); $i++) { 
+		$name = $files['picture']['name'][$i];
 		$strtime = strtotime("now");	
 		$type_file = $files['picture']['type'][$i];
+		$file_name = $files['picture']['name'][$i];
 		$type_exp = explode("/", $type_file);
 		$ext = pathinfo($name, PATHINFO_EXTENSION);
 		$tmp_name = $files['picture']['tmp_name'][$i];
@@ -17,25 +20,19 @@ for ($i=0; $i < count($files['picture']['name']); $i++) {
 		$date = date(Y.d.m, $strtime);
 		$name = md5($name); // + дата
 		$name = $name .':'. $date;
-		var_dump($tmp_name);
-		var_dump($name);
-		var_dump($type_exp[0]);
-		var_dump($ext);
-		var_dump($size_file);
 		$type_exp1 = $type_exp[1];
-		var_dump(searchType($type_exp1));
-	if ($type_exp[0] === 'image' && searchType($type_exp1) && sizeFile($size_file)) {
+	if ($type_exp[0] === 'image' && searchType($type_exp1) && sizeFile($size_file, $file_name)) {
 		echo "Тип файла $type_exp[0]<br>";
-		moveFile($tmp_name, $name, $ext);
+		moveFile($tmp_name, $name, $ext, $file_name);
 	}
 }
 
 // перемещение файла
-function moveFile($tmp_name, $name, $ext){
+function moveFile($tmp_name, $name, $ext, $file_name){
 	if (move_uploaded_file($tmp_name, "img/$name.$ext")){
-	    echo "Файл успешно загружен";
+	    echo "Файл $file_name успешно загружен";
 	} else {
-	    echo "Файл не был загружен";
+	    echo "Файл $file_name не был загружен";
 	}
 }
 function searchType($type_exp){
@@ -47,11 +44,12 @@ function searchType($type_exp){
 	}
 	return false;
 }
-function sizeFile($size_file){
+function sizeFile($size_file, $file_name){
 	if ($size_file <= 60000) {
 		return true;
 	}
-	echo "Размер превышает 60 КБ, фаил не загружен";
+	echo "Размер превышает 60 КБ, фаил $file_name не загружен, размер: $size_file";
+	//var_dump('Размер превышает 60 КБ, ');
 	return false;
 }
 
