@@ -24,23 +24,8 @@ trim,
 
 
 $post = $_POST;
-//var_dump($post);
-
-//$login = $post['login'];
-//$username = $post['username'];
-//$birth = $post['birth'];
-//$mail = $post['mail'];
-//$password = $post['password'];
-//$gender = $post['gender'];
-//$country = $post['country'];
 $url = $post['url'];
-//echo "Пользователь: $login<br>";
-//echo "Имя: $username<br>";
-//echo "Почта: $mail<br>";
-//echo "Пароль: $password<br>";
-//echo "Пол: $gender<br>";
-//echo "Страна: $country<br>";
-//$date1 = new DateTime("now");
+
 $today = strtotime("now");
 $today_now = date('H:i:m', $today);
 $res = strtotime($today_now) + strtotime('01:00') -strtotime("00:00:00");
@@ -51,15 +36,10 @@ if(isset($url)){
 	$valid_url = filter_var(trim($url), FILTER_VALIDATE_URL);
 }else{
 	echo "Введите ссылку<br>";
-	}
-
-	$file_h = 'hesh_url.txt';//фаил для хеша и коротких ссылок
-	$arry_hesh = file($file_h);
-	$file_arry = 'short_url.txt';//фаил для записи кортких ссылок
-	$file_shot_http = file($file_arry);
+	}	
 	$file_test = 'url.txt';//фаил-база где хранятся ссылки
-	$file_shot_test = file($file_test);
-
+	$file_shot_test = file($file_test, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+	
 function stringGetPath ($valid_url){
 	$parse_url = parse_url($valid_url);
 	foreach ($parse_url as $value) {		
@@ -77,9 +57,9 @@ function stringGetUrl ($valid_url){
 //Создание массива псевдослучайного байта и ссылки
 
 function random_bytes_http ($file, $valid_url){
-	$bytes = bin2hex(random_bytes(3));	
-	$random_bytes_http = array($bytes => $valid_url);
-	load_http($file, $random_bytes_http);		
+		$bytes = bin2hex(random_bytes(3));	
+		$random_bytes_http = array($bytes => $valid_url);	
+		load_http($file, $random_bytes_http);	
 	return $bytes;
 }
 
@@ -90,34 +70,26 @@ $current.= $key.'=>' . $value . '
 ';
 	}	
 	return file_put_contents($file, $current, LOCK_EX);
-}
-
+}	
    if($valid_url){
    		echo "Проверка ссылки пройдена $valid_url<br>";
-   		if (searchURL($file_shot_test, $valid_url)) {
-   			echo "Ссылка ЕСТЬ <br>";   			
+   		if (searchURL($file_shot_test, $valid_url)) {   				
    			$http = stringGetUrl($valid_url);
-   			$path = stringGetPath($valid_url);
-   			$path_shot = random_bytes_http($file_arry, $valid_url);
-   			echo "Короткая ссылка: $http/$path_shot<br>";   			
+   			$path = stringGetPath($valid_url);   			
 	        return $path_shot;
    		}else{
 	   				echo "Ссылки в файле-базе не найдена, Делаем ХЭШ<br>";
 			       $url_hesh = urlHesh($valid_url);		      
 			       	$http = stringGetUrl($valid_url);
 			       	$path = stringGetPath($valid_url);
-	   				$path_shot = random_bytes_http($file_arry, $valid_url);
-			        echo "Записываем в фаил хэш $url_hesh : Короткая ссылка $http/$path_shot<br>";			       
-		        if (searchHesh($arry_hesh, $url_hesh)) {
-		        	var_dump('Элемент найден'); 
-		        	$url_hesh = urlHesh($url_hesh);	
-		        	var_dump($url_hesh);
-		        	searchHesh($arry_hesh, $url_hesh);
+	   				$path_shot = random_bytes_http($file_shot_test, $valid_url);
+			        echo "Записываем в фаил хэш<br>Короткая ссылка $http/$path_shot<br>";			       
+		        if (searchHesh($file_shot_test, $url_hesh)) {		        	
+		        	$url_hesh = urlHesh($url_hesh);			        	
+		        	searchHesh($file_shot_test, $url_hesh);
 		        }
-		        if (!searchHesh($arry_hesh, $url_hesh)) {
-		        	var_dump('Элемента НЕТ');
-		        	var_dump($url_hesh);
-		        	load_hesh($file_h, $url_hesh, $http, $path_shot, $date1);
+		        if (!searchHesh($file_shot_test, $url_hesh)) {		        	
+		        	load_hesh($file_test, $url_hesh, $http, $path_shot, $date1);
 		       	}		             
 		     }
 
@@ -125,24 +97,37 @@ $current.= $key.'=>' . $value . '
 		
 	echo "Введите ссылку еще раз<br>";
 	}
-function searchURL($arr, $url_hesh){
-	foreach ( $arr as $v ){
-		if ( strpos($v, $url_hesh, 0) !== false ){
-	        	$url_hesh = $v; // найденная строка 
+
+	function searchURL($arr, $url_hesh){
+		$exp_url0 = null;
+		$exp_url = null;		
+		$exp_url0 = explode("//", stringGetUrl($url_hesh))[1];		
+		 foreach ( $arr as $v ){
+		 	$exp_url1 = explode("//", $v)[1];
+		 	$exp_url = explode("/", explode("//", $v)[1])[0];
+		 	if ( strpos($exp_url, $exp_url0, 0) !== false )
+	        {
+	        	echo "Ссылка $exp_url0 найдена в файле<br>";
+	        	echo "Короткая ссылка: http://$exp_url1<br>";
 	           return true;
-	    }	       		
-	}
+	        }	       		
+		 }
 		 return false;
-}
-function searchHesh($arr, $hesh){
-	foreach ( $arr as $v ){
-		if ( strpos($v, $hesh, 0) !== false ){	        	
-	           var_dump("Создаем новый ХЭШ");	          
-	           return true;
-	    } 			        	  		
 	}
-		 return false; 		
-}
+
+	function searchHesh($arr, $hesh){
+			$exp_hesh = null;
+		foreach ( $arr as $v ){			
+			$exp_hesh = explode(":", $v)[3];			
+		 	if (strpos($exp_hesh, $hesh, 0) !== false ){		 		 	
+	           var_dump("Создаем новый ХЭШ");	                 
+	           return true;
+	        } 			        	  		
+		 }
+		 if (strpos($exp_hesh, $hesh, 0) !== true ){		 		
+		 		return false; 	
+		 }	
+	}
 function urlHesh($url){
 	 $url_hesh = md5($url);
 	 return $url_hesh;
@@ -153,10 +138,5 @@ function load_hesh($file, $hesh, $http, $path_shot, $date1){
 	';
 	return file_put_contents($file, $current, LOCK_EX);
 }
-
-
-
-
-
 
 ?>
