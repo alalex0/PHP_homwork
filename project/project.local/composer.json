@@ -1,0 +1,19 @@
+{
+    "name": "web/frontcontroller",
+    "description": "ProjectLocal",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "AlexanderWeb",
+            "email": "alalex0@yandex.ru"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload":{
+        "psr-4":{
+            "Web\\Frontcontroller\\": "src/"
+        }
+    }
+}

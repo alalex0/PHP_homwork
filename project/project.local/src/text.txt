@@ -1,0 +1,12 @@
+text.txt
+class PuctureController
+private $pictureRepository
+
+function showAction($id){
+	$picture = $this->pictureRepository->getById($id);
+
+}
+//убрать дублирование кода renderPage()
+вынести в отдельный класс Controller
+
+parent:: вместо this
